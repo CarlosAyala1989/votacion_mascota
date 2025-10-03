@@ -50,20 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCaewO2KyMJOsgM6ilSN0EjXslSZuPQVVg',
-    appId: '1:765261190183:web:ffe26be3feb08b5913ea02',
-    messagingSenderId: '765261190183',
-    projectId: 'votacion-mascotas',
-    authDomain: 'votacion-mascotas.firebaseapp.com',
-    storageBucket: 'votacion-mascotas.firebasestorage.app',
-    measurementId: 'G-3NPL9CMVDE',
+    apiKey: 'AIzaSyCkz_MaZ-b2D-24aF5HRxPWdH82HHjg3E8',
+    appId: '1:174146614167:web:4e52e0877cb38fbe610ad2',
+    messagingSenderId: '174146614167',
+    projectId: 'votacion-mascotas-87a65',
+    authDomain: 'votacion-mascotas-87a65.firebaseapp.com',
+    storageBucket: 'votacion-mascotas-87a65.firebasestorage.app',
+    measurementId: 'G-F9FLK6KMHZ',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyC8C4hQ8fpdBzkFwFZleJfHVdT-jwCEAwo',
-    appId: '1:765261190183:android:87e51e179f0c4d5913ea02',
-    messagingSenderId: '765261190183',
-    projectId: 'votacion-mascotas',
-    storageBucket: 'votacion-mascotas.firebasestorage.app',
+    apiKey: 'AIzaSyAcLaq1Kd5d4eLJ9ilPtaM9zKf9k13WyjE',
+    appId: '1:174146614167:android:6650f48fe3cc1477610ad2',
+    messagingSenderId: '174146614167',
+    projectId: 'votacion-mascotas-87a65',
+    storageBucket: 'votacion-mascotas-87a65.firebasestorage.app',
   );
 }

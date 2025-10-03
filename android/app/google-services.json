@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "765261190183",
-    "project_id": "votacion-mascotas",
-    "storage_bucket": "votacion-mascotas.firebasestorage.app"
+    "project_number": "174146614167",
+    "project_id": "votacion-mascotas-87a65",
+    "storage_bucket": "votacion-mascotas-87a65.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:765261190183:android:87e51e179f0c4d5913ea02",
+        "mobilesdk_app_id": "1:174146614167:android:6650f48fe3cc1477610ad2",
         "android_client_info": {
           "package_name": "com.example.votacion_mascota"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC8C4hQ8fpdBzkFwFZleJfHVdT-jwCEAwo"
+          "current_key": "AIzaSyAcLaq1Kd5d4eLJ9ilPtaM9zKf9k13WyjE"
         }
       ],
       "services": {

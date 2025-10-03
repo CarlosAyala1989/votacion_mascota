@@ -355,17 +355,33 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
     }
   }
 
-  // Subir archivo a Firebase Storage
+  // Subir archivo a Firebase Storage con mejor manejo de errores
   Future<String> _subirArchivo(String ruta, dynamic archivo) async {
-    final ref = FirebaseStorage.instance.ref().child(ruta);
+    try {
+      final ref = FirebaseStorage.instance.ref().child(ruta);
 
-    if (archivo is XFile) {
-      await ref.putFile(File(archivo.path));
-    } else if (archivo is PlatformFile) {
-      await ref.putFile(File(archivo.path!));
+      if (archivo is XFile) {
+        final file = File(archivo.path);
+        if (!await file.exists()) {
+          throw Exception('El archivo no existe');
+        }
+        await ref.putFile(file);
+      } else if (archivo is PlatformFile) {
+        if (archivo.path == null) {
+          throw Exception('Ruta del archivo no valida');
+        }
+        final file = File(archivo.path!);
+        if (!await file.exists()) {
+          throw Exception('El archivo no existe');
+        }
+        await ref.putFile(file);
+      }
+
+      return await ref.getDownloadURL();
+    } catch (e) {
+      print('Error al subir archivo: $e');
+      throw Exception('Error al subir archivo: $e');
     }
-
-    return await ref.getDownloadURL();
   }
 
   // Guardar perro en Firebase Database
@@ -389,29 +405,56 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => Center(child: CircularProgressIndicator()),
+        builder: (context) =>
+            Center(child: CircularProgressIndicator(color: Color(0xFF6B4423))),
       );
 
-      // Subir archivos
-      String urlImagen = await _subirArchivo(
-        'imagenes/${DateTime.now().millisecondsSinceEpoch}.jpg',
-        _imagenSeleccionada,
-      );
+      // Subir imagen principal
+      String urlImagen = '';
+      try {
+        urlImagen = await _subirArchivo(
+          'imagenes/${DateTime.now().millisecondsSinceEpoch}.jpg',
+          _imagenSeleccionada,
+        );
+      } catch (e) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Error al subir la imagen. Verifica tu conexion y Firebase Storage',
+            ),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 5),
+          ),
+        );
+        return;
+      }
 
+      // Subir certificados (opcionales)
       String? urlCertOriginalidad;
       if (_certificadoOriginalidad != null) {
-        urlCertOriginalidad = await _subirArchivo(
-          'certificados/${DateTime.now().millisecondsSinceEpoch}_orig.${_certificadoOriginalidad!.extension}',
-          _certificadoOriginalidad,
-        );
+        try {
+          urlCertOriginalidad = await _subirArchivo(
+            'certificados/${DateTime.now().millisecondsSinceEpoch}_orig.${_certificadoOriginalidad!.extension}',
+            _certificadoOriginalidad,
+          );
+        } catch (e) {
+          print('Error al subir certificado de originalidad: $e');
+          // Continuar sin el certificado
+        }
       }
 
       String? urlCertPedigri;
       if (_certificadoPedigri != null) {
-        urlCertPedigri = await _subirArchivo(
-          'certificados/${DateTime.now().millisecondsSinceEpoch}_pedigri.${_certificadoPedigri!.extension}',
-          _certificadoPedigri,
-        );
+        try {
+          urlCertPedigri = await _subirArchivo(
+            'certificados/${DateTime.now().millisecondsSinceEpoch}_pedigri.${_certificadoPedigri!.extension}',
+            _certificadoPedigri,
+          );
+        } catch (e) {
+          print('Error al subir certificado de pedigri: $e');
+          // Continuar sin el certificado
+        }
       }
 
       // Guardar en database
@@ -430,14 +473,22 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
       Navigator.pop(context); // Cerrar dialogo de carga
       Navigator.pop(context); // Volver a pantalla anterior
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Perro registrado exitosamente')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Perro registrado exitosamente'),
+          backgroundColor: Color(0xFF6B4423),
+        ),
+      );
     } catch (e) {
       Navigator.pop(context);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error al registrar: $e')));
+      print('Error completo: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error al registrar: ${e.toString()}'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 5),
+        ),
+      );
     }
   }
 
