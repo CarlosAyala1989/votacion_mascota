@@ -458,17 +458,30 @@ class _PantallaRegistroState extends State<PantallaRegistro> {
       }
 
       // Guardar en database
+      print('Intentando guardar en Firebase Database...');
+      print('Nombre: ${_nombreController.text}');
+      print('Peso: ${_pesoController.text}');
+      print('Raza: $_razaSeleccionada');
+      print('URL Imagen: $urlImagen');
+
       DatabaseReference ref = FirebaseDatabase.instance.ref('mascotas').push();
-      await ref.set({
-        'nombre': _nombreController.text,
-        'peso': _pesoController.text,
-        'raza': _razaSeleccionada,
+
+      Map<String, dynamic> datosPerro = {
+        'nombre': _nombreController.text.trim(),
+        'peso': _pesoController.text.trim(),
+        'raza': _razaSeleccionada ?? '',
         'url_imagen': urlImagen,
-        'url_cert_originalidad': urlCertOriginalidad,
-        'url_cert_pedigri': urlCertPedigri,
+        'url_cert_originalidad': urlCertOriginalidad ?? '',
+        'url_cert_pedigri': urlCertPedigri ?? '',
         'votos': 0,
         'fecha_registro': DateTime.now().toIso8601String(),
-      });
+      };
+
+      print('Datos a guardar: $datosPerro');
+
+      await ref.set(datosPerro);
+
+      print('Datos guardados exitosamente en Firebase Database');
 
       Navigator.pop(context); // Cerrar dialogo de carga
       Navigator.pop(context); // Volver a pantalla anterior
